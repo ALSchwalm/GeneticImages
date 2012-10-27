@@ -64,22 +64,19 @@ def R(x_1, y_1):
 #Fitness function tries to reduce
 #uniform results
 def eval_func(genome):
-    test_list = [0] * 50
+    test_list = [0] * 200
     code_comp = genome.getCompiledCode()
-    '''
-    for place in range(50):
+    
+    for place in range(len(test_list)):
         X = randint(0, IMAGE_WIDTH)
         Y = randint(0, IMAGE_HEIGHT)
-        theta = get_theta(X, Y)
-        R = get_R(X, Y)
-        test_list[place] = int(eval(code_comp))
+        Z = Y
+        test_list[place] = tuple(eval(code_comp))
     set_len = len(list(set(test_list)))
-    '''
-    set_len = 0
-    
+
     if set_len == 1:
         return 1
-    elif set_len == 50:
+    elif set_len == len(test_list):
         return 0
     else: 
         return random()
