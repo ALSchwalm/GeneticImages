@@ -4,10 +4,7 @@ from pyevolve import Consts
 from pyevolve import Crossovers
 from random import *
 from math import *
-
-
-IMAGE_WIDTH = 600
-IMAGE_HEIGHT = 600
+from Consts import *
 
 # The operators available to the GP
 @GTree.gpdec(representation="+", color="coral")
@@ -54,12 +51,15 @@ def theta(x, y, normal=IMAGE_WIDTH):
     else:
         return (1, 1, 1) #atan(float(y)) * normal
 
-def R(x_1, y_1):
-    x_2 = IMAGE_WIDTH/2
-    y_2 = IMAGE_HEIGHT/2
+def gp_R(point):
     
-    c = (x_1 - x_2)**2 + (y_1 - y_2)**2
-    return (1, 1, 1) #sqrt(c)
+    x1 = point[0]
+    y1 = point[1]
+    z1 = point[2]
+    
+    c = sqrt(((IMAGE_WIDTH/2) - x1)**2 +  ((IMAGE_HEIGHT/2) - y1)**2 + ((IMAGE_DEPTH/2) - z1)**2)
+    
+    return [c,c,c]
 
 #Fitness function tries to reduce
 #uniform results
@@ -70,7 +70,7 @@ def eval_func(genome):
     for place in range(len(test_list)):
         X = randint(0, IMAGE_WIDTH)
         Y = randint(0, IMAGE_HEIGHT)
-        Z = Y
+        Z = randint(0, IMAGE_DEPTH)
         test_list[place] = tuple(eval(code_comp))
     set_len = len(list(set(test_list)))
 
