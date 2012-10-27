@@ -6,24 +6,27 @@ from random import *
 from math import *
 
 
-IMAGE_WIDTH = 400
-IMAGE_HEIGHT = 400
-
-def root(a, b, c):
-    return (a, b, c)
+IMAGE_WIDTH = 600
+IMAGE_HEIGHT = 600
 
 # The operators available to the GP
 @GTree.gpdec(representation="+", color="coral")
-def gp_add(a, b): return a+b
+def gp_add(a, b): 
+    out = [a[x] + b[x] for x in range(len(a))]
+    return out
 
 @GTree.gpdec(representation="avg", color="deepskyblue")
-def gp_avg(a, b): return (a+b)/2.0
+def gp_avg(a, b): 
+    return gp_divide(gp_add(a, b), (2, 2, 2))
 
 @GTree.gpdec(representation="/", color="green")
 def gp_divide(a, b):
-    if b == 0: return 0
-    else: return a/b
-
+    if any([x == 0 for x in b]):
+        return a
+    else:
+        return [a[x]/b[x] for x in range(len(a))]
+        
+    
 @GTree.gpdec(representation="max", color="lawngreen")
 def gp_max(a, b): return max(a,b)
 
@@ -43,26 +46,27 @@ def gp_ifgt(a, b, c, d):
     else:
         return d
         
-def get_theta(x, y, normal=IMAGE_WIDTH):
+def theta(x, y, normal=IMAGE_WIDTH):
     x -= IMAGE_WIDTH/2
     y -= IMAGE_HEIGHT/2
     if x != 0:
-        return atan(float(y)/x) * normal
+        return (0, 0, 0) #atan(float(y)/x) * normal
     else:
-        return atan(float(y)) * normal
+        return (1, 1, 1) #atan(float(y)) * normal
 
-def get_R(x_1, y_1):
+def R(x_1, y_1):
     x_2 = IMAGE_WIDTH/2
     y_2 = IMAGE_HEIGHT/2
     
     c = (x_1 - x_2)**2 + (y_1 - y_2)**2
-    return sqrt(c)
+    return (1, 1, 1) #sqrt(c)
 
 #Fitness function tries to reduce
 #uniform results
 def eval_func(genome):
     test_list = [0] * 50
     code_comp = genome.getCompiledCode()
+    '''
     for place in range(50):
         X = randint(0, IMAGE_WIDTH)
         Y = randint(0, IMAGE_HEIGHT)
@@ -70,7 +74,8 @@ def eval_func(genome):
         R = get_R(X, Y)
         test_list[place] = int(eval(code_comp))
     set_len = len(list(set(test_list)))
-
+    '''
+    set_len = 0
     
     if set_len == 1:
         return 1
@@ -82,7 +87,6 @@ def eval_func(genome):
 def setup():
     
     genome = GTree.GTreeGP()
-    genome.setRoot(GTree.GTreeNodeGP("root", Consts.nodeType["TERMINAL"]))
     genome.processNodes()
     
     genome.setParams(max_depth=5, bestrawscore=0, rounddecimal=2, rangemin=0, rangemax=10, method="grow")
@@ -91,7 +95,7 @@ def setup():
     ga = GSimpleGA.GSimpleGA(genome)
     
     #Gene pool contains X, Y, constants and functions
-    ga.setParams(gp_terminals = ['X', 'Y', 'theta', 'R', 'ephemeral:random.uniform(-300,300)'], gp_function_prefix = "gp")
+    ga.setParams(gp_terminals = ['(X, Y, Z)', '(X, Z, Y)', '(Z, Y, X)', 'ephemeral:(random.uniform(-300,300),random.uniform(-300,300),random.uniform(-300,300))'], gp_function_prefix = "gp") #'ephemeral:random.uniform(-300,300)'
     
     ga.setMinimax(Consts.minimaxType["minimize"])
     ga.setGenerations(100)
@@ -100,5 +104,4 @@ def setup():
     ga.setPopulationSize(20)
     ga.terminationCriteria.set(GSimpleGA.RawScoreCriteria)
     ga.evolve(freq_stats=5)
-    print(ga.getPopulation()[0])
     return ga
