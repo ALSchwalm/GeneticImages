@@ -69,7 +69,7 @@ def setup(growth):
     Surface = pygame.display.set_mode((IMAGE_WIDTH,IMAGE_HEIGHT), 0, 32)
     clock = pygame.time.Clock()
     font = pygame.font.Font(None, 28)
-    pygame.display.set_caption('Genetic Images v0.2')
+    pygame.display.set_caption('Genetic Images v0.3')
     
     image = create_image(ga)
 

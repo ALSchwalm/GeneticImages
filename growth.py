@@ -75,15 +75,20 @@ def eval_func(genome):
         Z = randint(0, IMAGE_DEPTH)
         test_list[place] = tuple(eval(code_comp))
     set_len = len(list(set(test_list)))
+    value = 1 - (set_len / len(test_list)) 
     
-    return 1 - (set_len / len(test_list))
+    grad_points = [ (0, 0, IMAGE_DEPTH), (0, IMAGE_HEIGHT, IMAGE_DEPTH), (IMAGE_WIDTH, 0, IMAGE_DEPTH), (IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_DEPTH)]
+    for point1 in grad_points:
+        for point2 in grad_points:
+            X = abs(point1[0] - point2[0])
+            Y = abs(point1[1] - point2[1])
+            Z = abs(point1[2] - point2[2])
+            if point1 != point2 and all(eval(code_comp)) > 200:
+                value += 1
+                break
+    return value
+                
     
-#    if set_len == 1:
-#        return 1
-#    elif set_len == len(test_list):
-#        return 0
-#    else: 
-#        return random()
 
 def setup():
     
