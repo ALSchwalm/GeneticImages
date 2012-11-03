@@ -8,10 +8,11 @@ def transform(old_max, old_min, new_max, new_min, value):
     oldRange = old_max - old_min
     newRange = new_max - new_min
     newValue = (((float(value) - old_min) * newRange)/oldRange) + new_min
-    return int(newValue)
+    return abs(int(newValue))
 
 
 def create_image(ga):
+    f = open("temp.txt", 'w')
     image_string = ""
     ga.getPopulation().sort()
     print(ga.getPopulation()[0])
@@ -27,11 +28,12 @@ def create_image(ga):
         for X in range(0, IMAGE_WIDTH):
             for Z in range(1, IMAGE_DEPTH):
                 r_value, g_value, b_value = eval(code)
-                line_string += " ".join([str(   transform(true_min, true_max, 0, 255, abs(int(x)))   ) for x in [r_value, g_value, b_value]]) + " "
+                line_string += " ".join([str(transform(true_min, true_max, 0, 255, abs(int(x)))) for x in [r_value, g_value, b_value]]) + " " # transform(true_min, true_max, 0, 255, abs(int(x)))   )
         image_string += line_string +"\n"
     print("Done")
     image_string = "P3\n"+str(IMAGE_WIDTH) + " " + str(IMAGE_HEIGHT) + "\n255\n" + image_string
     image_fstr = cStringIO.StringIO(image_string)
+    f.write(image_string)
     return pygame.image.load(image_fstr)
 
 

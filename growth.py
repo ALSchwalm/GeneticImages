@@ -43,13 +43,15 @@ def gp_ifgt(a, b, c, d):
     else:
         return d
         
-def theta(x, y, normal=IMAGE_WIDTH):
+def gp_theta(p1, p2):
+    x = p1[0]
+    y = p2[1]
     x -= IMAGE_WIDTH/2
     y -= IMAGE_HEIGHT/2
     if x != 0:
-        return (0, 0, 0) #atan(float(y)/x) * normal
+        return [atan(float(y)/x) * IMAGE_WIDTH] * 3
     else:
-        return (1, 1, 1) #atan(float(y)) * normal
+        return [atan(float(y)) * IMAGE_WIDTH] * 3
 
 def gp_R(point):
     
@@ -73,13 +75,15 @@ def eval_func(genome):
         Z = randint(0, IMAGE_DEPTH)
         test_list[place] = tuple(eval(code_comp))
     set_len = len(list(set(test_list)))
-
-    if set_len == 1:
-        return 1
-    elif set_len == len(test_list):
-        return 0
-    else: 
-        return random()
+    
+    return 1 - (set_len / len(test_list))
+    
+#    if set_len == 1:
+#        return 1
+#    elif set_len == len(test_list):
+#        return 0
+#    else: 
+#        return random()
 
 def setup():
     
