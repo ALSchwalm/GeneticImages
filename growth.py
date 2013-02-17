@@ -101,13 +101,13 @@ def setup():
     ga = GSimpleGA.GSimpleGA(genome)
     
     #Gene pool contains X, Y, constants and functions
-    ga.setParams(gp_terminals = ['(X, Y, Z)', '(X, Z, Y)', '(Z, Y, X)', 'ephemeral:(random.uniform(-300,300),random.uniform(-300,300),random.uniform(-300,300))'], gp_function_prefix = "gp") #'ephemeral:random.uniform(-300,300)'
+    ga.setParams(gp_terminals = ['(X, Y, Z)', '(X, Z, Y)', '(Z, Y, X)', 'random.uniform(-300,300),random.uniform(-300,300))'], gp_function_prefix = "gp") #'ephemeral:random.uniform(-300,300)'
     
     ga.setMinimax(Consts.minimaxType["minimize"])
     ga.setGenerations(100)
-    ga.setCrossoverRate(0.5)
-    ga.setMutationRate(0.75)
-    ga.setPopulationSize(20)
+    ga.setCrossoverRate(0.9)
+    ga.setMutationRate(0.05)
+    ga.setPopulationSize(120)
     ga.terminationCriteria.set(GSimpleGA.RawScoreCriteria)
     ga.evolve(freq_stats=5)
     return ga
