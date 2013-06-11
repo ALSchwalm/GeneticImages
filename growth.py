@@ -77,7 +77,11 @@ def eval_func(genome):
     set_len = len(list(set(test_list)))
     value = 1 - (set_len / len(test_list)) 
     
-    grad_points = [ (0, 0, IMAGE_DEPTH), (0, IMAGE_HEIGHT, IMAGE_DEPTH), (IMAGE_WIDTH, 0, IMAGE_DEPTH), (IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_DEPTH)]
+    grad_points = [ (0, 0, IMAGE_DEPTH),
+                    (0, IMAGE_HEIGHT, IMAGE_DEPTH),
+                    (IMAGE_WIDTH, 0, IMAGE_DEPTH),
+                    (IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_DEPTH)]
+    
     for point1 in grad_points:
         for point2 in grad_points:
             X = abs(point1[0] - point2[0])
@@ -87,21 +91,28 @@ def eval_func(genome):
                 value += 1
                 break
     return value
-                
-    
 
 def setup():
-    
     genome = GTree.GTreeGP()
     genome.processNodes()
     
-    genome.setParams(max_depth=5, bestrawscore=0, rounddecimal=2, rangemin=0, rangemax=10, method="grow")
+    genome.setParams(max_depth=5,
+                     bestrawscore=0,
+                     rounddecimal=2,
+                     rangemin=0,
+                     rangemax=10,
+                     method="grow")
+    
     genome.evaluator.set(eval_func)
     genome.crossover.set(Crossovers.GTreeCrossoverSinglePointStrict)
     ga = GSimpleGA.GSimpleGA(genome)
     
     #Gene pool contains X, Y, constants and functions
-    ga.setParams(gp_terminals = ['(X, Y, Z)', '(X, Z, Y)', '(Z, Y, X)', 'random.uniform(-300,300),random.uniform(-300,300))'], gp_function_prefix = "gp") #'ephemeral:random.uniform(-300,300)'
+    ga.setParams(gp_terminals = ['(X, Y, Z)',
+                                 '(X, Z, Y)',
+                                 '(Z, Y, X)',
+                                 'ephemeral:(random.uniform(-300,300), random.uniform(-300,300), random.uniform(-300,300))'],
+                 gp_function_prefix = "gp")
     
     ga.setMinimax(Consts.minimaxType["minimize"])
     ga.setGenerations(100)
