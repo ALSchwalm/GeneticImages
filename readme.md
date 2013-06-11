@@ -1,4 +1,9 @@
 Genetic Image Grower
 ====================
 
-	Uses pyEvolve to grow images.
+Use pyEvolve to grow images.
+
+Controls
+========
+
+Click on the background and a new image will be generated.
